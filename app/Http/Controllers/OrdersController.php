@@ -13,13 +13,13 @@ class OrdersController extends Controller
     public function placeOrder(Request $request)
     {
         dd($request->all());
-        
+
         // Validate the request data
         $request->validate([
             'products' => 'required|array', // An array of product IDs and quantities
             'total_price' => 'required|numeric',
         ]);
-        dd($request->all());
+        // dd($request->all());
         // Create the order
         $order = Order::create([
             'user_id' => Auth::id(), // Assuming you are using authentication

@@ -6,6 +6,8 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -38,10 +40,16 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 // Route::get('/orders', [OrdersController::class, 'orders'])->middleware('auth:api');
 Route::get('/orders', [OrdersController::class, 'orders']);
 Route::get('/orders/{id}', [OrdersController::class, 'orders'])->middleware('auth:api');
-Route::post('/orders', [OrdersController::class, 'placeOrder']);
+Route::post('/place-orders', [OrdersController::class, 'placeOrder']);
 
 
 Route::post('/cart', [CartController::class, 'addToCart']);
 Route::get('/cart', [CartController::class, 'viewCart']);
 Route::put('/cart', [CartController::class, 'updateCart']);
 Route::delete('/cart', [CartController::class, 'removeFromCart']);
+
+Route::get('/email/verify/{id}', [AuthController::class, 'verify'])->name('verification.verify');
+Route::get('/email/resend', [AuthController::class, 'resend'])->name('verification.resend');
+
+
+
