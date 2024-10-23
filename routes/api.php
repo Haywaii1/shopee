@@ -39,8 +39,10 @@ Route::post('/register', [UserController::class, 'register'])->name('register');
 // Get all orders for the authenticated user
 // Route::get('/orders', [OrdersController::class, 'orders'])->middleware('auth:api');
 Route::get('/orders', [OrdersController::class, 'orders']);
-Route::get('/orders/{id}', [OrdersController::class, 'orders'])->middleware('auth:api');
-Route::post('/place-orders', [OrdersController::class, 'placeOrder']);
+Route::get('/orders/{id}', [OrdersController::class, 'orders']);
+Route::post('/orders', [OrdersController::class, 'placeOrder']);
+Route::delete('/orders/{id}', [OrdersController::class, 'deleteOrder']);
+
 
 
 Route::post('/cart', [CartController::class, 'addToCart']);
@@ -48,8 +50,8 @@ Route::get('/cart', [CartController::class, 'viewCart']);
 Route::put('/cart', [CartController::class, 'updateCart']);
 Route::delete('/cart', [CartController::class, 'removeFromCart']);
 
-Route::get('/email/verify/{id}', [AuthController::class, 'verify'])->name('verification.verify');
-Route::get('/email/resend', [AuthController::class, 'resend'])->name('verification.resend');
+Route::get('/email/verify/{id}', [UserController::class, 'verify'])->name('verification.verify');
+Route::get('/email/resend', [UserController::class, 'resend'])->name('verification.resend');
 
 
 

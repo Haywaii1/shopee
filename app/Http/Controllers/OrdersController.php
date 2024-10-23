@@ -42,5 +42,23 @@ class OrdersController extends Controller
             return response()->json($orders);
         }
 
+        public function deleteOrder($id)
+    {
+        // Find the order by its ID
+        $order = Order::find($id);
+
+        // Check if the order exists
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        // Delete the order and its associated items if necessary
+        $order->orderItems()->delete(); // Assuming there's a relationship to delete the items
+        $order->delete(); // Delete the order itself
+
+        // Return a response indicating success
+        return response()->json(['message' => 'Order deleted successfully'], 200);
+    }
+
 }
 
