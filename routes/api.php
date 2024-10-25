@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FeedbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,3 +54,14 @@ Route::delete('/cart', [CartController::class, 'removeFromCart']);
 Route::get('/email/verify/{id}', [UserController::class, 'verify'])->name('verification.verify');
 Route::get('/email/resend', [UserController::class, 'resend'])->name('verification.resend');
 Route::get('/password-reset', [UserController::class, 'passwordReset'])->name('password.reset')->middleware('guest');
+
+
+// Customer care contact
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/feedback', [FeedbackController::class, 'store']);
+    Route::get('/feedback', [FeedbackController::class, 'index']);
+    Route::get('/feedback/{id}', [FeedbackController::class, 'show']);
+    Route::delete('/feedback/{id}', [FeedbackController::class, 'destroy']);
+});
+
