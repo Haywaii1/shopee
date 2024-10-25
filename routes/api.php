@@ -8,7 +8,6 @@ use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -33,6 +32,9 @@ Route::post('/delete/{id}', [ProductController::class, 'delete'])->name('delete'
 
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::post('/register', [UserController::class, 'register'])->name('register');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+Route::post('/password-email', [UserController::class, 'passwordEmail'])->name('password.email');
+Route::post('/password-update', [UserController::class, 'passwordUpdate'])->name('password.update');
 
 // Place a new order
 
@@ -43,8 +45,6 @@ Route::get('/orders/{id}', [OrdersController::class, 'orders']);
 Route::post('/orders', [OrdersController::class, 'placeOrder']);
 Route::delete('/orders/{id}', [OrdersController::class, 'deleteOrder']);
 
-
-
 Route::post('/cart', [CartController::class, 'addToCart']);
 Route::get('/cart', [CartController::class, 'viewCart']);
 Route::put('/cart', [CartController::class, 'updateCart']);
@@ -52,6 +52,4 @@ Route::delete('/cart', [CartController::class, 'removeFromCart']);
 
 Route::get('/email/verify/{id}', [UserController::class, 'verify'])->name('verification.verify');
 Route::get('/email/resend', [UserController::class, 'resend'])->name('verification.resend');
-
-
-
+Route::get('/password-reset', [UserController::class, 'passwordReset'])->name('password.reset')->middleware('guest');

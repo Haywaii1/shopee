@@ -11,6 +11,8 @@ use App\Models\Order;
 use App\Notifications\VerifyEmailNotification;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+
 
 
 class UserController extends Controller
@@ -110,4 +112,73 @@ class UserController extends Controller
             'token' => $token,
         ], 200);
     }
+
+    public function passwordReset(Request $request){
+        return view('auth.passwords.reset', [
+            'token' => $request->token
+        ]);
+    }
+
+    public function passwordEmail(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email|exists:users,email',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    $response = Password::sendResetLink(
+        $request->only('email')
+    );
+
+    if ($response == Password::RESET_LINK_SENT) {
+        return response()->json(['message' => 'Password reset link sent to your email!'], 200);
+    } else {
+        return response()->json(['message' => 'Failed to send password reset link'], 500);
+    }
+}
+
+public function passwordUpdate(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required|string|confirmed|min:8',
+        'token' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function ($user, $password) {
+            $user->password = bcrypt($password);
+            $user->save();
+        }
+    );
+
+    if ($status === Password::PASSWORD_RESET) {
+        return response()->json(['message' => 'Password reset was successful'], 200);
+    } else {
+        return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
+    }
+}
+
+public function logout(Request $request)
+{
+    auth()->logout();
+
+    return response()->json(['message' => 'Logout Successfully'], 200);
+}
+
+
 }
